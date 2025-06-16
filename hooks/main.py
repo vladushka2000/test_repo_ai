@@ -5,6 +5,7 @@ import uuid
 from http import HTTPStatus
 import logging
 
+import consts
 import dtos
 import http_client
 import interfaces
@@ -72,7 +73,7 @@ async def _create_us(
             )
 
             if priority := file.content.get("priority"):
-                us.priority = priority
+                us.priority = consts.Priority(priority)
 
             to_create[us.id] = us
         except Exception as e:
