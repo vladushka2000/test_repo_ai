@@ -48,10 +48,15 @@ class HTTPClient(interfaces.IClient):
                 data=request_params.form_data,
             )
     
+            try:
+                payload = response.json()
+            except Exception:
+                payload = response
+    
             return dtos.HTTPResponseDTO(
                 status=response.status_code,
                 headers=response.headers,
-                payload=response.json()
+                payload=payload
             )
         except:
             print("Ошибочка")
