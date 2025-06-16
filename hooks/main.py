@@ -147,7 +147,7 @@ async def main():
 
                 print(f"Добавлен новый US {file_info.path}")
 
-        print(Чтение измененных файлов...")
+        print("Чтение измененных файлов...")
 
         modified_contents = _read_files(modified_files)
         modified_us = []
