@@ -34,7 +34,7 @@ def _read_files(file_paths: list[str]) -> list[dtos.FileContentDTO]:
                     )
                 )
         except Exception as e:
-            logger.error(f"Ошибка при чтении {path}: {e}")
+            print(f"Ошибка при чтении {path}: {e}")
 
     return contents
 
@@ -77,7 +77,7 @@ async def _create_us(
 
             to_create[us.id] = us
         except Exception as e:
-            logger.error(f"Ошибка при чтении файла {e}")
+            print(f"Ошибка при чтении файла {e}")
 
     for us in to_create.values():
         try:
@@ -86,7 +86,7 @@ async def _create_us(
             if response.status == HTTPStatus.OK:
                 created.append(us.title)
         except Exception as e:
-            logger.error(e)
+            print(e)
             continue
 
     return created
@@ -134,9 +134,9 @@ async def main():
         new_files = args.new.split() if args.new else []
         modified_files = args.modified.split() if args.modified else []
 
-        logger.info("Получение access-токена...")
+        print("Получение access-токена...")
 
-        logger.info("Чтение новых файлов...")
+        print("Чтение новых файлов...")
 
         new_contents = _read_files(new_files)
         new_us = []
