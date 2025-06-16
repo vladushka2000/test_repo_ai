@@ -5,11 +5,17 @@ import uuid
 from http import HTTPStatus
 import logging
 
-import consts
 import dtos
 import http_client
 import interfaces
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
 logger = logging.getLogger(__name__)
 
 
@@ -34,7 +40,7 @@ def _read_files(file_paths: list[str]) -> list[dtos.FileContentDTO]:
                     )
                 )
         except Exception as e:
-            print(f"Ошибка при чтении {path}: {e}")
+            logger.error(f"Ошибка при чтении {path}: {e}")
 
     return contents
 
@@ -73,11 +79,11 @@ async def _create_us(
             )
 
             if priority := file.content.get("priority"):
-                us.priority = consts.Priority(priority)
+                us.priority = priority
 
             to_create[us.id] = us
         except Exception as e:
-            print(f"Ошибка при чтении файла {e}")
+            logger.error(f"Ошибка при чтении файла {e}")
 
     for us in to_create.values():
         try:
@@ -86,7 +92,7 @@ async def _create_us(
             if response.status == HTTPStatus.OK:
                 created.append(us.title)
         except Exception as e:
-            print(f"Ошибка при создании {e}")
+            logger.error(e)
             continue
 
     return created
@@ -129,15 +135,13 @@ async def main():
             password=password
         )
 
+        logger.info("Получение access-токена...")
         token = await _get_access_token(http_client_, user_creds)
 
         new_files = args.new.split() if args.new else []
         modified_files = args.modified.split() if args.modified else []
 
-        print("Получение access-токена...")
-
-        print("Чтение новых файлов...")
-
+        logger.info("Чтение новых файлов...")
         new_contents = _read_files(new_files)
         new_us = []
 
@@ -145,10 +149,9 @@ async def main():
             if file_info.path.split("/")[-1].startswith("us"):
                 new_us.append(file_info)
 
-                print(f"Добавлен новый US {file_info.path}")
+                logger.info(f"Добавлен новый US {file_info.path}")
 
-        print("Чтение измененных файлов...")
-
+        logger.info("Чтение измененных файлов...")
         modified_contents = _read_files(modified_files)
         modified_us = []
 
@@ -156,11 +159,11 @@ async def main():
             if file_info.path.split("/")[-1].startswith("US"):
                 modified_us.append(file_info)
 
-                print(f"Добавлен измененный US {file_info.path}")
+                logger.info(f"Добавлен измененный US {file_info.path}")
 
         await _create_us(http_client_, new_us, token, id_)
 
-        print(f"Созданы US в DSTracker")
+        logger.info(f"Созданы US в DSTracker")
     finally:
         await http_client_.disconnect()
 
