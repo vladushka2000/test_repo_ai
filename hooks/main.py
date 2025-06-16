@@ -145,9 +145,9 @@ async def main():
             if file_info.path.split("/")[-1].startswith("us"):
                 new_us.append(file_info)
 
-                logger.info(f"Добавлен новый US {file_info.path}")
+                print(f"Добавлен новый US {file_info.path}")
 
-        logger.info("Чтение измененных файлов...")
+        print(Чтение измененных файлов...")
 
         modified_contents = _read_files(modified_files)
         modified_us = []
@@ -156,11 +156,11 @@ async def main():
             if file_info.path.split("/")[-1].startswith("US"):
                 modified_us.append(file_info)
 
-                logger.info(f"Добавлен измененный US {file_info.path}")
+                print(f"Добавлен измененный US {file_info.path}")
 
         await _create_us(http_client_, new_us, token, id_)
 
-        logger.info(f"Созданы US в DSTracker")
+        print(f"Созданы US в DSTracker")
     finally:
         await http_client_.disconnect()
 
