@@ -39,20 +39,22 @@ class HTTPClient(interfaces.IClient):
         :param request_params: параметры запроса
         :return: результаты запроса
         """
-
-        response = await self._client.post(
-            url=request_params.url,
-            headers=request_params.headers,
-            params=request_params.query_params,
-            json=request_params.payload,
-            data=request_params.form_data,
-        )
-
-        return dtos.HTTPResponseDTO(
-            status=response.status_code,
-            headers=response.headers,
-            payload=response.json()
-        )
+        try:
+            response = await self._client.post(
+                url=request_params.url,
+                headers=request_params.headers,
+                params=request_params.query_params,
+                json=request_params.payload,
+                data=request_params.form_data,
+            )
+    
+            return dtos.HTTPResponseDTO(
+                status=response.status_code,
+                headers=response.headers,
+                payload=response.json()
+            )
+        except:
+            print("Ошибочка")
 
     async def retrieve(self, request_params: dtos.HTTPRequestDTO) -> dtos.HTTPResponseDTO:
         """
