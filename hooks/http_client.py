@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 from typing import Iterable
 
 import httpx
@@ -39,27 +40,25 @@ class HTTPClient(interfaces.IClient):
         :param request_params: параметры запроса
         :return: результаты запроса
         """
+
+        response = await self._client.post(
+            url=request_params.url,
+            headers=request_params.headers,
+            params=request_params.query_params,
+            json=request_params.payload,
+            data=request_params.form_data,
+        )
+
         try:
-            response = await self._client.post(
-                url=request_params.url,
-                headers=request_params.headers,
-                params=request_params.query_params,
-                json=request_params.payload,
-                data=request_params.form_data,
-            )
-    
-            try:
-                payload = response.json()
-            except Exception:
-                payload = response
-    
-            return dtos.HTTPResponseDTO(
-                status=response.status_code,
-                headers=response.headers,
-                payload=payload
-            )
-        except:
-            print("Ошибочка")
+            payload = response.json()
+        except JSONDecodeError:
+            payload = response.text
+
+        return dtos.HTTPResponseDTO(
+            status=response.status_code,
+            headers=response.headers,
+            payload=payload
+        )
 
     async def retrieve(self, request_params: dtos.HTTPRequestDTO) -> dtos.HTTPResponseDTO:
         """
@@ -111,16 +110,13 @@ async def create_us(client: interfaces.IClient, us: dtos.UserStoryCreate, token:
     :return: ответ сервера
     """
 
-    try:
-        request = dtos.HTTPRequestDTO(
-            url=f"{consts.DSTRACKER_API}/user-stories/",
-            payload=us.model_dump(mode="json"),
-            headers={
-                "Authorization": f"Bearer {token}"
-            }
-        )
-    except:
-        print("Тут ошибка")
+    request = dtos.HTTPRequestDTO(
+        url=f"{consts.DSTRACKER_API}/user-stories",
+        payload=us.model_dump(mode="json"),
+        headers={
+            "Authorization": f"Bearer {token}"
+        }
+    )
 
     return await client.create(request)
 
