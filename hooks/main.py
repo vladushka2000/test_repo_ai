@@ -5,9 +5,9 @@ import uuid
 from http import HTTPStatus
 import logging
 
-from hooks import dtos
-from hooks import http_client
-from hooks import interfaces
+import dtos
+import http_client
+import interfaces
 
 logger = logging.getLogger(__name__)
 
