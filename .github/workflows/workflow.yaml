@@ -44,7 +44,7 @@ jobs:
           LUKERIA_PASSWORD: ${{ secrets.LUKERIA_PASSWORD }}
           LUKERIA_ID: ${{ secrets.LUKERIA_ID }}
         run: |
-          python git_hooks/main.py \
+          python hooks/main.py \
             --username "$LUKERIA_USERNAME" \
             --password "$LUKERIA_PASSWORD" \
             --id "$LUKERIA_ID" \
