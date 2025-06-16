@@ -86,7 +86,7 @@ async def _create_us(
             if response.status == HTTPStatus.OK:
                 created.append(us.title)
         except Exception as e:
-            print(e)
+            print(f"Ошибка при создании {e}")
             continue
 
     return created
