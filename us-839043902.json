@@ -1,0 +1,16 @@
+{
+    "id": "US-019",
+    "title": "Внесение оценки в Story Points",
+    "role": "Пользователь системы",
+    "action": "вносить оценку в единицах Story Points в рабочие элементы бэклога",
+    "goal": "оценивать объем работы",
+    "description": "Как пользователь системы, я хочу иметь возможность вносить оценку в единицах Story Points в рабочие элементы бэклога Epic, User Story, Bug, чтобы оценивать объем работы.",
+    "priority": "Средний",
+    "type": "ФТ",
+    "acceptance_criteria": "1. Система предоставляет интерфейс для внесения оценки в Story Points.\n2. Оценка может быть внесена для элементов Epic, User Story, Bug.\n3. Оценка отображается в соответствующем элементе бэклога.",
+    "related_requirements": "FT-19",
+    "functional_requirements": "FT-19: Внесение оценки в Story Points",
+    "non_functional_requirements": "NFR-4: Точность оценки",
+    "dependencies": "Нет",
+    "additional_conditions": "Интерфейс должен поддерживать стандартные значения Story Points."
+}
