@@ -1,0 +1,41 @@
+name: Синхронизация артефактов в репозитории с DsTracker
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  process-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          # Новые файлы
+          NEW_FILES=$(git diff --name-only --diff-filter=A HEAD^ HEAD || echo "")
+          # Изменённые файлы
+          MODIFIED_FILES=$(git diff --name-only --diff-filter=M HEAD^ HEAD || echo "")
+
+          echo "NEW_FILES=${NEW_FILES}" >> $GITHUB_OUTPUT
+          echo "MODIFIED_FILES=${MODIFIED_FILES}" >> $GITHUB_OUTPUT
+
+          echo "New files: ${NEW_FILES}"
+          echo "Modified files: ${MODIFIED_FILES}"
+
+      - name: Sync
+        env:
+          LUKERIA_USERNAME: ${{ secrets.LUKERIA_USERNAME }}
+          LUKERIA_PASSWORD: ${{ secrets.LUKERIA_PASSWORD }}
+          LUKERIA_ID: ${{ secrets.LUKERIA_ID }}
+        run: |
+          python git_hooks/main.py \
+            --username "$LUKERIA_USERNAME" \
+            --password "$LUKERIA_PASSWORD" \
+            --id "$LUKERIA_ID" \
+            --new "${{ steps.changed-files.outputs.NEW_FILES }}" \
+            --modified "${{ steps.changed-files.outputs.MODIFIED_FILES }}"
