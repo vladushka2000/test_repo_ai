@@ -67,4 +67,4 @@ class UserRole(enum.Enum):
             cls.DEVOPS_ENGINEER,
         ]
 
-DSTRACKER_API = "http://localhost:9000/api/v1"
+DSTRACKER_API = "https://dstracker.critsk.ru/api/v1"
