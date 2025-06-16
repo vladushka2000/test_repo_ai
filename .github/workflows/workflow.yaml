@@ -13,6 +13,17 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          allow-prereleases: true
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
       - name: Get changed files
         id: changed-files
         run: |
@@ -33,7 +44,7 @@ jobs:
           LUKERIA_PASSWORD: ${{ secrets.LUKERIA_PASSWORD }}
           LUKERIA_ID: ${{ secrets.LUKERIA_ID }}
         run: |
-          python hooks/main.py \
+          python git_hooks/main.py \
             --username "$LUKERIA_USERNAME" \
             --password "$LUKERIA_PASSWORD" \
             --id "$LUKERIA_ID" \
