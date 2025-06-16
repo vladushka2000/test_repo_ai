@@ -104,13 +104,16 @@ async def create_us(client: interfaces.IClient, us: dtos.UserStoryCreate, token:
     :return: ответ сервера
     """
 
-    request = dtos.HTTPRequestDTO(
-        url=f"{consts.DSTRACKER_API}/user-stories/",
-        payload=us.model_dump(mode="json"),
-        headers={
-            "Authorization": f"Bearer {token}"
-        }
-    )
+    try:
+        request = dtos.HTTPRequestDTO(
+            url=f"{consts.DSTRACKER_API}/user-stories/",
+            payload=us.model_dump(mode="json"),
+            headers={
+                "Authorization": f"Bearer {token}"
+            }
+        )
+    except:
+        print("Тут ошибка")
 
     return await client.create(request)
 
