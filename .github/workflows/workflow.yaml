@@ -42,7 +42,9 @@ jobs:
         id: repo-name
         run: |
           REPO_NAME=$(echo "$GITHUB_REPOSITORY" | cut -d'/' -f2)
-          echo "REPO_NAME=${REPO_NAME}" >> $GITHUB_OUTPUT
+          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_OUTPUT
+    
+          echo "Extracted repo name: $REPO_NAME"
 
       - name: Sync
         env:
